@@ -21,6 +21,10 @@ public class InMemoryTimeEntryRepository implements TimeEntryRepository {
 
         lastId ++;
 
+        //DateTimeFormatter test = DateTimeFormatter.ofPattern("yyyy-MM-dd", timeEntry.getDate().toString());
+
+        Date d = new Date(timeEntry.getDate().toString());
+
         LocalDate formattedDate = LocalDate.parse(timeEntry.getDate().format(formatter));
 
         TimeEntry newTimeEntry = new TimeEntry(lastId, timeEntry.getProjectId(), timeEntry.getUserId(), formattedDate, timeEntry.getHours());
