@@ -2,11 +2,15 @@ package io.pivotal.pal.tracker;
 
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository("TimeEntryRepository")
 public class InMemoryTimeEntryRepository implements TimeEntryRepository {
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     Map<Long, TimeEntry> timeEntriesMap = new HashMap<>();
 
@@ -17,7 +21,9 @@ public class InMemoryTimeEntryRepository implements TimeEntryRepository {
 
         lastId ++;
 
-        TimeEntry newTimeEntry = new TimeEntry(lastId, timeEntry.getProjectId(), timeEntry.getUserId(), timeEntry.getDate(), timeEntry.getHours());
+        LocalDate formattedDate = LocalDate.parse(timeEntry.getDate().format(formatter));
+
+        TimeEntry newTimeEntry = new TimeEntry(lastId, timeEntry.getProjectId(), timeEntry.getUserId(), formattedDate, timeEntry.getHours());
         timeEntriesMap.put(lastId, newTimeEntry);
 
         return newTimeEntry;
@@ -41,9 +47,12 @@ public class InMemoryTimeEntryRepository implements TimeEntryRepository {
         TimeEntry te = this.find(id);
 
         if(Objects.nonNull(te)){
+
+            LocalDate formattedDate = LocalDate.parse(timeEntry.getDate().format(formatter));
+
             te.setProjectId(timeEntry.getProjectId());
             te.setUserId(timeEntry.getUserId());
-            te.setDate(timeEntry.getDate());
+            te.setDate(formattedDate);
             te.setHours(timeEntry.getHours());
 
             timeEntriesMap.replace(id, te);
