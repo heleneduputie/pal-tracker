@@ -10,8 +10,6 @@ import java.util.stream.Collectors;
 @Repository("TimeEntryRepository")
 public class InMemoryTimeEntryRepository implements TimeEntryRepository {
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
     Map<Long, TimeEntry> timeEntriesMap = new HashMap<>();
 
     Long lastId = 0L;
@@ -21,13 +19,7 @@ public class InMemoryTimeEntryRepository implements TimeEntryRepository {
 
         lastId ++;
 
-        //DateTimeFormatter test = DateTimeFormatter.ofPattern("yyyy-MM-dd", timeEntry.getDate().toString());
-
-        Date d = new Date(timeEntry.getDate().toString());
-
-        LocalDate formattedDate = LocalDate.parse(timeEntry.getDate().format(formatter));
-
-        TimeEntry newTimeEntry = new TimeEntry(lastId, timeEntry.getProjectId(), timeEntry.getUserId(), formattedDate, timeEntry.getHours());
+        TimeEntry newTimeEntry = new TimeEntry(lastId, timeEntry.getProjectId(), timeEntry.getUserId(), timeEntry.getDate(), timeEntry.getHours());
         timeEntriesMap.put(lastId, newTimeEntry);
 
         return newTimeEntry;
@@ -52,11 +44,10 @@ public class InMemoryTimeEntryRepository implements TimeEntryRepository {
 
         if(Objects.nonNull(te)){
 
-            LocalDate formattedDate = LocalDate.parse(timeEntry.getDate().format(formatter));
 
             te.setProjectId(timeEntry.getProjectId());
             te.setUserId(timeEntry.getUserId());
-            te.setDate(formattedDate);
+            te.setDate(timeEntry.getDate());
             te.setHours(timeEntry.getHours());
 
             timeEntriesMap.replace(id, te);

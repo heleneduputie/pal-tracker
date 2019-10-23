@@ -80,7 +80,7 @@ public class TimeEntryControllerTest {
     public void testList() {
         List<TimeEntry> expected = asList(
             new TimeEntry(1L, 123L, 456L, LocalDate.parse("2017-01-08"), 8),
-            new TimeEntry(2L, 789L, 321L, LocalDate.parse("01/08/2017"), 4)
+            new TimeEntry(2L, 789L, 321L, LocalDate.parse("2018-07-12"), 4)
         );
         doReturn(expected).when(timeEntryRepository).list();
 
